@@ -55,3 +55,8 @@ export async function createPost(input: PostInput): Promise<Post> {
   // Spread input dulu: field yang tidak dikembalikan server tetap terisi.
   return { ...input, ...unwrap<Post>(await res.json()) };
 }
+
+export async function deletePost(id: number): Promise<void> {
+  const res = await fetch(`${BASE_URL}/${id}`, { method: 'DELETE' });
+  if (!res.ok) throw new Error(`Gagal menghapus post (status ${res.status})`);
+}
