@@ -2,11 +2,12 @@ import { useEffect, useState } from 'react';
 import { createPost, deletePost, getPosts } from '../api/posts';
 import type { PostInput } from '../api/posts';
 import type { Post } from '../types/Post';
+import { useDebounce } from '../hooks/useDebounce';
 import { PostCard } from './PostCard';
 import { PostForm } from './PostForm';
 
 // PostBoard adalah induk state untuk papan post (Tahap 2 - Anggota C).
-// Semua logika API dipusatkan di sini; PostCard hanya presentasi.
+// Semua logika API dipusatkan di sini; PostCard/PostForm hanya presentasi.
 export function PostBoard() {
   // Pola 3 state dari modul (bagian 10): data, isLoading, error
   const [posts, setPosts] = useState<Post[]>([]);
@@ -15,9 +16,12 @@ export function PostBoard() {
   // Error aksi POST/DELETE dipisah agar daftar (hasil GET) tidak hilang
   const [actionError, setActionError] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<number | null>(null);
+  const [search, setSearch] = useState('');
+  const debouncedSearch = useDebounce(search, 300);
 
-  // GET: jalan saat mount. AbortController di cleanup membatalkan request
-  // saat komponen unmount (aman untuk StrictMode yang menjalankan efek 2x di dev).
+  // GET: jalan saat mount dan setiap kali debouncedSearch berubah (bonus ?search=).
+  // AbortController membatalkan request lama supaya hasil lama tidak menimpa
+  // hasil baru, sekaligus aman untuk StrictMode yang menjalankan efek 2x di dev.
   useEffect(() => {
     const controller = new AbortController();
 
@@ -25,7 +29,7 @@ export function PostBoard() {
       setIsLoading(true);
       setError(null);
       try {
-        setPosts(await getPosts(undefined, controller.signal));
+        setPosts(await getPosts(debouncedSearch, controller.signal));
       } catch (err) {
         // Request yang dibatalkan cleanup bukan error sungguhan; abaikan.
         if (err instanceof DOMException && err.name === 'AbortError') return;
@@ -37,7 +41,7 @@ export function PostBoard() {
 
     loadPosts();
     return () => controller.abort();
-  }, []);
+  }, [debouncedSearch]);
 
   const handleAdd = async (input: PostInput) => {
     setActionError(null);
@@ -77,6 +81,8 @@ export function PostBoard() {
     }
   };
 
+  const isSearching = debouncedSearch.trim() !== '';
+
   return (
     <main className="post-board">
       <h1>Daftar Post</h1>
@@ -92,6 +98,15 @@ export function PostBoard() {
       <section aria-label="Daftar post dari API">
         <h2>Post ({posts.length})</h2>
 
+        <input
+          className="post-board__search"
+          type="search"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Cari judul post..."
+          aria-label="Cari post berdasarkan judul"
+        />
+
         {/* Urutan tampilan wajib: loading -> error -> kosong -> daftar */}
         {isLoading ? (
           <p className="post-board__status">Memuat post...</p>
@@ -100,7 +115,11 @@ export function PostBoard() {
             {error}
           </p>
         ) : posts.length === 0 ? (
-          <p className="post-board__status">Belum ada post.</p>
+          <p className="post-board__status">
+            {isSearching
+              ? `Tidak ada post dengan judul "${debouncedSearch}".`
+              : 'Belum ada post.'}
+          </p>
         ) : (
           <div className="post-board__grid">
             {posts.map((post) => (
