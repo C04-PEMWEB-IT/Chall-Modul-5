@@ -140,3 +140,158 @@
   color: var(--text-h);
   font: inherit;
 }
+
+/* --- Anggota C: papan post (integrasi API) --- */
+.post-board {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 32px 24px 64px;
+  text-align: left;
+}
+
+.post-board > h1 {
+  margin-top: 0;
+}
+
+.post-form {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 32px;
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--social-bg);
+}
+
+.post-form h2 {
+  margin: 0 0 4px;
+}
+
+.post-form__field {
+  display: grid;
+  gap: 6px;
+}
+
+.post-form label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-h);
+}
+
+.post-form input,
+.post-form textarea {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--text-h);
+  font: inherit;
+}
+
+.post-form textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+.post-form button,
+.post-card button {
+  justify-self: start;
+  padding: 8px 14px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: var(--accent);
+  color: #fff;
+  font: inherit;
+  cursor: pointer;
+  transition: filter 0.2s;
+}
+
+.post-form button:hover:not(:disabled),
+.post-card button:hover:not(:disabled) {
+  filter: brightness(1.1);
+}
+
+.post-form button:disabled,
+.post-card button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.post-card button {
+  background: var(--accent-bg);
+  color: var(--accent);
+  border-color: var(--accent-border);
+}
+
+.post-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+}
+
+.post-card__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.post-card h3 {
+  margin: 0;
+  color: var(--text-h);
+  font-size: 18px;
+  overflow-wrap: anywhere;
+}
+
+.post-card__user {
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: var(--accent-bg);
+  color: var(--accent);
+  font-size: 12px;
+}
+
+.post-card__body {
+  flex-grow: 1;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.post-board__search {
+  box-sizing: border-box;
+  width: 100%;
+  margin-bottom: 16px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--text-h);
+  font: inherit;
+}
+
+.post-board__status {
+  padding: 24px;
+  border: 1px dashed var(--border);
+  border-radius: 12px;
+  text-align: center;
+}
+
+.post-board__status--error {
+  border-style: solid;
+  border-color: #d0342c;
+  color: #d0342c;
+}
+
+.post-board__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
