@@ -127,3 +127,16 @@
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
+
+/* --- Anggota B: kolom pencarian --- */
+.notes-board__search {
+  box-sizing: border-box;
+  width: 100%;
+  margin-bottom: 16px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--text-h);
+  font: inherit;
+}
