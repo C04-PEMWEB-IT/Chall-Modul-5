@@ -43,3 +43,15 @@ export async function getPosts(
     post.title.toLowerCase().includes(keyword.toLowerCase()),
   );
 }
+
+export async function createPost(input: PostInput): Promise<Post> {
+  const res = await fetch(BASE_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(input),
+  });
+  if (!res.ok) throw new Error(`Gagal menambah post (status ${res.status})`);
+
+  // Spread input dulu: field yang tidak dikembalikan server tetap terisi.
+  return { ...input, ...unwrap<Post>(await res.json()) };
+}
